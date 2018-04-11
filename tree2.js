@@ -9,17 +9,21 @@ var margin = {
 var clientWidth = document.getElementById("tree-container").clientWidth;
 var clientHeight = document.getElementById("tree-container").clientHeight;
 var width = clientWidth - margin.left - margin.right;
-var height = clientHeight - margin.top - margin.bottom;
+var maxLength;
+var height = 100 * maxLength;
 var rectWidth = 150;
 var rectHeight = 24;
 
 // declares a tree layout and assigns the size
-var treemap = d3.tree().size([height, width]);
+// var treemap = d3.tree().size([height, width]);
 
 // load the external data
 d3.json("treeData.json", function(error, treeData) {
     if (error)
         throw error;
+
+    // var treemap = d3.tree().size([height, width]);
+    var treemap = d3.tree();
 
     //  assigns the data to a hierarchy using parent-child relationships
     var nodes = d3.hierarchy(treeData, function(d) {
@@ -29,13 +33,18 @@ d3.json("treeData.json", function(error, treeData) {
     // maps the node data to the tree layout
     nodes = treemap(nodes);
 
-    function zoomed() {
-        g.attr("transform", d3.event.transform); //The zoom and panning is affecting my G element which is a child of SVG
-    }
+    var result = nodes.descendants()
+    var length = result.map (function (obj){
+        if (obj.children) {
+            return obj.children.length
+        }
+    });
 
-    var zoom = d3.zoom()
-        .scaleExtent([0.3,2])
-        .on("zoom", zoomed);
+    maxLength = length.sort(function(a, b){ return b-a; })[0];
+    height = 100 * maxLength;
+    treemap.size([height, width]);
+
+    nodes = treemap(nodes); // 덮어 씌움 ㅋㅋ
 
     // append the svg object to the body of the page
     // appends a 'group' element to 'svg'
@@ -43,20 +52,29 @@ d3.json("treeData.json", function(error, treeData) {
     var svg = d3.select("#tree-container")
         .append("svg")
         .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom);
+        .attr("height", height + margin.top + margin.bottom)
+
+    var zoom = d3.zoom()
+        .scaleExtent([0.25, 2])
+        .on("zoom", zoomed);
 
     var zoomer = svg.append("rect")
         .attr("width", clientWidth)
         .attr("height", clientHeight)
         .style("fill", "none")
         .style("pointer-events", "all")
-        .call(zoom);
+        .call(zoom)
+
 
     var g = svg.append("g")
         .attr("class","root")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        .attr("transform", "translate(" + margin.left + "," + -(height-clientHeight-100)/2  + ")");
 
+    zoomer.call(zoom.transform, d3.zoomIdentity.translate(margin.left,-(height-clientHeight-100)/2));
 
+    function zoomed() {
+        g.attr("transform", d3.event.transform);
+    }
 
     // 글자 자르는 function
     function wrap() {
@@ -75,16 +93,16 @@ d3.json("treeData.json", function(error, treeData) {
         console.log(d.data.url);
     }
 
-    function ct2(d) {
-        console.log(nodes);
-    }
-
     // adds each node as a group
-    var node = g.selectAll(".node").data(nodes.descendants()).enter().append("g").attr("class", function(d) {
-        return "node" + ( d.children ? " node--internal" : " node--leaf");
-    }).attr("transform", function(d) {
-        return "translate(" + d.y + "," + d.x + ")";
-    });
+    var node = g.selectAll(".node")
+        .data(nodes.descendants())
+        .enter().append("g")
+        .attr("class", function(d) {
+            return "node" + ( d.children ? " node--internal" : " node--leaf");
+        }).attr("transform", function(d) {
+            return "translate(" + d.y  + "," + d.x + ")";
+        });
+
     // adds the circle to the node
     node.append("rect")
         .attr("class", function(d) {
@@ -102,7 +120,6 @@ d3.json("treeData.json", function(error, treeData) {
             }
         });
 
-
     node.append("text")
         .attr("dy", 5)
         .attr("dx", 5)
@@ -114,9 +131,9 @@ d3.json("treeData.json", function(error, treeData) {
             }
         })
         .each(wrap)
-        .on("click", function(d){
-            return ct2(d);
-        });
+        // .on("click", function(d){
+        //     return ct2(d);
+        // });
 
     node.append("rect")
         .attr("width", rectWidth)
@@ -176,7 +193,8 @@ d3.json("treeData.json", function(error, treeData) {
             } else {
                 return d.data.tag;
             }
-        });
+        })
+        .each(wrap);
 
 
     // adds the links between the nodes
@@ -193,5 +211,6 @@ d3.json("treeData.json", function(error, treeData) {
                 });
 
     var element = d3.select('.root').node();
-    console.log(element.getBoundingClientRect());
+    //console.log(element.getBoundingClientRect());
+
 });
