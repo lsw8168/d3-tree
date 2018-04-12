@@ -8,9 +8,6 @@
     "children": [{
         "type": "url",
         "level": 2,
-        "ip": "119.28.225.122",
-        "url": "http:\/\/www.monlime.com\/CuMqYb.html",
-        "tag": "MS Edge Exploit CVE-2016-7201",
         "warning": true,
         "children": [{
             "type": "url",
@@ -56,35 +53,49 @@
         "name": "http:\/\/www.monlime.com\/CnJkDd.jar",
         "test": 9
     }, {
-        "type": "url",
+        "type": "file",
+        "level": 2,
+        "ip": "119.28.225.122",
+        "tag": "PE Detected",
+        "warning": true,
+        "children": null,
+        "name": "js.js",
+        "test": 10,
+        "file_request_id" : 4465243,
+        "file" : {
+            "sample_risk_level" : 2,
+            "sample_url": "http:\/\/www.monlime.com\/zump.exe",
+            "sample_sha256" : "12354354574864",
+            "sample_tag" : "Parming"
+        }
+    }, {
+        "type": "file",
         "level": 2,
         "ip": "119.28.225.122",
         "url": "http:\/\/www.monlime.com\/zump.exe",
         "tag": "PE Detected",
         "warning": true,
         "children": null,
-        "name": "http:\/\/www.monlime.com\/zump.exe",
-        "test": 10
+        "name": "zump111.exe",
+        "test": 8,
+        "file_request_id" : 123123123,
+        "file" : {
+            "sample_risk_level" : 2,
+            "sample_sha256" : "12354354574864",
+            "sample_tag" : "Parming"
+        }
     }, {
-        "type": "url",
-        "level": 2,
-        "ip": "119.28.225.122",
-        "url": "http:\/\/www.monlime.com\/PvBnJy.html",
-        "tag": "CK Vip Exploit",
-        "warning": true,
-        "children": null,
-        "name": "http:\/\/www.monlime.com\/PvBnJy.html",
-        "test": 8
-    }, {
-        "type": "url",
+        "type": "file",
         "level": 0,
         "ip": "119.28.225.122",
-        "url": "http:\/\/www.monlime.com\/FqDxOw.jar",
-        "tag": "Java Unknown Exploit",
+        "url": "http:\/\/www.monlime.com\/zump.exe",
+        "tag": "PE Detected",
         "warning": false,
         "children": null,
-        "name": "http:\/\/www.monlime.com\/FqDxOw.jar",
-        "test": 4
+        "name": "zump2222.exe",
+        "category": "Parming",
+        "test": 4,
+        "file_request_id" : null
     }, {
         "type": "url",
         "level": 2,

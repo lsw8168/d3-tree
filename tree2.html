@@ -5,7 +5,7 @@
 #tree-container {
     background-color: #f4f4f4;
     width:1280px;
-    height:600px;
+    height:760px;
     border: 1px solid #ccc;
     overflow: hidden
 }
@@ -35,10 +35,13 @@
 .node text {
     font-size: 11px;
 }
+.node text.level {
+    fill : red;
+}
 .node text.ip_link {
     fill : blue;
     cursor: pointer;
-
+    text-decoration: underline;
 }
 .node text.ip_link:hover {
     text-decoration: underline;
@@ -47,14 +50,18 @@
   text-shadow: 0 1px 0 #fff, 0 -1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff;
 } */
 
-.link {
+path {
   fill: none;
   stroke: #ccc;
   stroke-width: 1px;
 }
 
-.link.warning {
+path.warning {
   stroke: red;
+}
+path.file {
+  stroke: blue;
+  stroke-width: 2px;
 }
 
 </style>
