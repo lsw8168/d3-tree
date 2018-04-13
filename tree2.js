@@ -52,7 +52,7 @@ d3.json("treeData.json", function(error, treeData) {
     var svg = d3.select("#tree-container")
         .append("svg")
         .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
+        .attr("height", height + margin.top + margin.bottom);
 
     var zoom = d3.zoom()
         .scaleExtent([0.25, 2])
@@ -63,23 +63,28 @@ d3.json("treeData.json", function(error, treeData) {
         .attr("height", clientHeight)
         .style("fill", "none")
         .style("pointer-events", "all")
-        .call(zoom)
+        .call(zoom);
 
     var g = svg.append("g")
-        .attr("class","root")
-        .attr("transform", "translate(" + margin.left + "," + -(height-clientHeight-100)/2  + ")");
+        .attr("class","root");
+        // .attr("transform", "translate(0,0)");
 
     console.log(height);
     console.log(clientHeight);
 
     var initScale = clientHeight / height;
     console.log(initScale);
-
-    zoomer.call(zoom.transform, d3.zoomIdentity.translate(margin.left,-(height-clientHeight-100)/2));
+    if (initScale > 1) {
+        zoomer.call(zoom.transform, d3.zoomIdentity.translate(margin.left, -(height-clientHeight)/2));
+    } else {
+        zoomer.call(zoom.transform, d3.zoomIdentity.translate(100, 0).scale(initScale));
+    }
 
     function zoomed() {
         g.attr("transform", d3.event.transform);
     }
+
+
 
     // 글자 자르는 function
     function wrap() {
@@ -97,6 +102,8 @@ d3.json("treeData.json", function(error, treeData) {
         alert(d.data.url);
         console.log(d.data.url);
     }
+
+
 
     // adds each node as a group
     var node = g.selectAll(".node")
@@ -224,7 +231,7 @@ d3.json("treeData.json", function(error, treeData) {
                     d.y + (d.parent.y + rectWidth)) / 2 + "," + d.parent.x + " " + (d.parent.y + rectWidth) + "," + d.parent.x; //180은 rect width
                 });
 
-    var element = d3.select('.root').node();
+    //var element = d3.select('.root').node();
     //console.log(element.getBoundingClientRect());
 
 });
